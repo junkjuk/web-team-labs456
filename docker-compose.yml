@@ -1,0 +1,58 @@
+services:
+  postgres:
+    container_name: lab5_postgres
+    build:
+      context: ./postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: lab5_postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+  mongodb:
+    container_name: lab5_mongodb
+    build:
+      context: ./mongodb
+    environment:
+      - MONGODB_INITDB_ROOT_USERNAME=user
+      - MONGODB_INITDB_ROOT_PASSWORD=password
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongodb/mongo-init:/docker-entrypoint-initdb.d
+
+  api:
+    container_name: lab5_api
+    build:
+      context: ./api
+    ports:
+      - "3100:3100"
+    depends_on:
+      - postgres
+      - mongodb
+    networks:
+      - default
+
+  front:
+    container_name: lab5_front
+    build:
+      context: ./frontend/lab4
+    ports:
+      - '8080:8080'
+    depends_on:
+      - api
+    networks:
+      - default
+
+volumes:
+  postgres_data:
+  mongodb_data:
+
+
+networks:
+  default:
+    driver: bridge
