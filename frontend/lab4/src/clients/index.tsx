@@ -6,20 +6,14 @@ import GridComponent, {gridVal} from "../components/gridComponent.tsx";
 import {apiUrl} from "../consts.tsx";
 import {data} from "autoprefixer";
 import {When} from "react-if";
-import {get, post, remove} from "../utils.tsx";
+import {get, patch, post, remove} from "../utils.tsx";
 import Layout from "../layout.tsx";
-import {v4 as uuidv4} from "uuid";
+import NewClientForm from "./newClientForm.tsx";
+import EditClientForm from "./editClientForm.tsx";
 
 export default function ClientsComponent() {
   const [cars, setCars] = React.useState<Client[]>([]);
-  const [newClient, setNewClient] = React.useState<Client>({
-    id: "",
-    full_name: "",
-    email: "",
-    age: "",
-    sex: "",
-  });
-
+  const [editClient, setEditClient] = React.useState<Client>();
   useEffect(() => {
     get(apiUrl + 'clients').then(res => setCars(res.clients));
   }, []);
@@ -41,16 +35,18 @@ export default function ClientsComponent() {
     location.reload()
   }
 
-  const add = async () => {
-    console.log(newClient);
-    await post(apiUrl + 'clients', newClient);
-
+  const add = (c: Client) => {
+    post(apiUrl + 'clients', c);
   }
 
-  const createNewClient = (c: Client) : Client => {
-    const car = {...c};
-    car.id = uuidv4();
-    return car;
+  const edit = (c: Client) => {
+    patch(apiUrl + 'clients/' + c.id, c);
+  }
+
+  const selectEditClient = (id: string) => {
+    const client = cars.find((c) => c.id === id);
+    console.log(client);
+    setEditClient(client);
   }
 
   return <Layout childrenLeft={<>
@@ -62,36 +58,13 @@ export default function ClientsComponent() {
         "email",
         "age",
         "sex",
-        "Delete"]} onDelete={deleteItem} values={cars.map(car => clientToValues(car))}/>
+        "Delete"]} onDelete={deleteItem} values={cars.map(car => clientToValues(car))}
+      onEdit={selectEditClient}/>
     </When></>} titleLeft="Clients" childrenRight={
-    <form>
-      <div className="flex flex-col gap-2 items-center sm:items-start">
-        <input type="text" placeholder="full_name" onChange={(e) => setNewClient(c => {
-          const car = createNewClient(c)
-          car.full_name = e.target.value;
-          return car;
-        })}/>
-        <input type="text" placeholder="email" onChange={(e) => setNewClient(c => {
-          const car = createNewClient(c)
-
-          car.email = e.target.value;
-          return car;
-        })}/>
-        <input type="text" placeholder="age" onChange={(e) => setNewClient(c => {
-          const car = createNewClient(c)
-
-          car.age = e.target.value;
-          return car;
-        })}/>
-        <input type="text" placeholder="sex" onChange={(e) => setNewClient(c => {
-          const car = createNewClient(c)
-
-          car.sex = e.target.value;
-          return car;
-        })}/>
-        <button onClick={add}>Add</button>
-      </div>
-    </form>
+    <>
+      <NewClientForm onSubmit={add} />
+      <EditClientForm onSubmit={edit} client={editClient} />
+    </>
   } titleRight={
     "Add Client"}/>;
 }

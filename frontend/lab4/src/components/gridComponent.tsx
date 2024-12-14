@@ -10,6 +10,7 @@ export interface gridComponentProps {
   columns: string[],
   values: gridVal[];
   onDelete: (id: string) => void;
+  onEdit?: (id: string) => void;
 }
 
 export default function GridComponent(props: gridComponentProps) {
@@ -18,7 +19,6 @@ export default function GridComponent(props: gridComponentProps) {
   const gridClass4 = "grid grid-cols-[200px_repeat(4,_1fr)] w-full";
   const gridClass3 = "grid grid-cols-[200px_repeat(3,_1fr)] w-full";
   const gridClass6 = "grid grid-cols-[200px_repeat(6,_1fr)] w-full";
-  console.log(props.columns.length, props.columns);
   const getClass = (numb: number) => {
     switch (numb) {
       case 5:
@@ -32,9 +32,11 @@ export default function GridComponent(props: gridComponentProps) {
     }
   }
   return (
-    <div className={getClass(props.columns.length - 1)}>
+    <div className={getClass(props.onEdit !== undefined? props.columns.length: props.columns.length - 1)}>
       <When condition={!!props.columns && props.columns.length !== 0}>
-        {() => <>{props.columns?.map(i => <div className="w-fit" key={i}>{i}</div>)}</>}
+        {() => <>{props.columns?.map(i => <div className="w-fit" key={i}>{i}</div>)}<When condition={props.onEdit !== undefined}>
+          <div className="w-fit">Edit</div>
+        </When></>}
       </When>
       {
         props.values.map((item) => (
@@ -44,7 +46,13 @@ export default function GridComponent(props: gridComponentProps) {
               }
               <button className="w-fit" onClick={() => props.onDelete(item.id)}>
                 Delete
-              </button></>
+              </button>
+              <When condition={props.onEdit !== undefined}>
+                <button className="w-fit" onClick={() => props.onEdit(item.id)}>
+                  Edit
+                </button>
+              </When>
+            </>
         ))
       }
     </div>
