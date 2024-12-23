@@ -26,6 +26,18 @@ const Car = sequelize.define(
       values: ['bad', 'ok', 'good', 'mint'],
       defaultValue: 'ok'
     },
+    image_blob: {
+      type: DataTypes.BLOB('long'),
+      allowNull: true,
+    },
+    image_blob_mime_type: {
+      type: DataTypes.STRING,
+      
+    },
+    image_path: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     created_at: {
       type: DataTypes.DATE,
       default: DataTypes.NOW

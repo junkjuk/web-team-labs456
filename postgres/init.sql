@@ -16,6 +16,9 @@ CREATE TABLE CAR (
                      price INTEGER NOT NULL,
                      mileage INTEGER NOT NULL,
                      condition TEXT NOT NULL CHECK (condition IN ('bad', 'ok', 'good', 'mint')),
+                     image_blob BYTEA,
+                     image_path TEXT,
+                     image_blob_mime_type TEXT,
                      created_at DATE DEFAULT now(),
                      updated_at DATE DEFAULT now()
 );
