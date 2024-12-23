@@ -50,6 +50,15 @@ services:
     networks:
       - default
 
+  logger:
+    container_name: lab5_logger
+    build:
+      context: ./logger
+      ports:
+        - '3200:3200'
+      networks:
+        - default
+
 volumes:
   postgres_data:
   mongodb_data:
