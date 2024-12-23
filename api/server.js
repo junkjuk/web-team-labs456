@@ -14,7 +14,7 @@ mongoose
   .catch((err) => {
     console.error('EXIT STATUS 1');
     console.error('Could not connect to MongoDB:', err);
-    print('CONNECTION:', process.env.MONGO_DB_CONNECTION)
+    console.log('CONNECTION:', process.env.MONGO_DB_CONNECTION)
     process.exit();
   });
 
@@ -28,8 +28,6 @@ mongoose
     process.exit(1);
   }
 })();
-  
-
 
 app.listen(3100, () => {
   console.log("Server up and running at port 3100")
