@@ -10,7 +10,7 @@ const carCrud = new PostgresCrud(Car, 'Car');
 exports.createCar = carCrud.create();
 exports.getCar = carCrud.get();
 exports.getAllCars = carCrud.getAll();
-exports.updateCar = carCrud.update();
+exports.updateCar = carCrud.updateCar();
 exports.deleteCar = carCrud.delete();
 
 

@@ -1,5 +1,6 @@
 const catchAsync = require('./catchAsync');
 const {Op} = require("sequelize");
+const logMessage = require("../logger/logger");
 
 class PostgresCrud {
   constructor(model, name) {
@@ -11,7 +12,7 @@ class PostgresCrud {
     return catchAsync(async (req, res, next) => {
       console.log(req.body);
       const obj = await this.model.create(req.body)
-
+      logMessage(this.name + " Create", req.body);
       res.status(200).json({
         status: 'success',
         [this.name.toLowerCase()]: obj
@@ -48,6 +49,7 @@ class PostgresCrud {
   get() {
     return catchAsync(async (req, res, next) => {
       const obj = await this.model.findByPk(req.params.id);
+      logMessage(this.name + " Get", req.params.id);
 
       if (!obj) {
         return res.status(404).json({ 
@@ -68,6 +70,7 @@ class PostgresCrud {
   getAll() {
     return catchAsync(async (req, res, next) => {
       const objs = await this.model.findAll()
+      logMessage(this.name + " Get", "all");
 
       res.status(200).json({
         status: 'success',
@@ -79,7 +82,7 @@ class PostgresCrud {
     });
   }
 
-  update() {
+  updateCar() {
     return catchAsync(async (req, res, next) => {
       console.log(req.body);
       console.log(req.params);
@@ -98,6 +101,7 @@ class PostgresCrud {
         returning: true,
         plain: true
       })
+      logMessage(this.name + " Update", req.body);
 
       if (!obj) {
         return res.status(404).json({ 
@@ -115,6 +119,33 @@ class PostgresCrud {
     });
   }
 
+  update() {
+    return catchAsync(async (req, res, next) => {
+      const obj = await this.model.update(req.body, {
+        where: {
+          id: req.params.id
+        },
+        returning: true,
+        plain: true
+      })
+      logMessage(this.name + " Update", req.body);
+
+      if (!obj) {
+        return res.status(404).json({
+          status: 'error',
+          message: `${this.name} with this id could not be found`
+        })
+      }
+
+      res.status(200).json({
+        status: 'success',
+        data: {
+          [this.name.toLowerCase()]: obj[1]['dataValues']
+        },
+      });
+    });
+  }
+
   delete() {
     return catchAsync(async (req, res, next) => {
       await this.model.destroy({
@@ -122,6 +153,7 @@ class PostgresCrud {
           id: req.params.id
         }
       })
+      logMessage(this.name + " Delete", req.body);
 
       res.status(204).json({
         status: 'success',
