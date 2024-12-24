@@ -54,9 +54,9 @@ services:
     image: eclipse-mosquitto
     container_name: mqtt5
     ports:
-      - "1880:1880"
+      - "1883:1883"
     volumes:
-      - ./mosquitto/config:/mosquitto/config:rw
+      - "./mosquitto.conf:/mosquitto/config/mosquitto.conf"
     networks:
       - default
 
@@ -70,8 +70,6 @@ services:
       - default
     depends_on:
       - mqtt5
-
-
 
 volumes:
   postgres_data:
