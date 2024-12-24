@@ -1,25 +1,15 @@
-const amqp = require('amqplib/callback_api');
-const logMessage = require('./logMessage');
+import mqtt from 'mqtt';
 
-amqp.connect('amqp://localhost', (err, connection) => {
-    if (err) {
-        throw err;
-    }
-    connection.createChannel((err, channel) => {
-        if (err) {
-            throw err;
-        }
-
-        const queue = 'mainQueue';
-
-        channel.assertQueue(queue, {
-            durable: false
-        });
-
-        console.log(`Waiting for messages in ${queue}`);
-
-        channel.consume(queue, (msg) => {
-          logMessage(msg);
-        }, { noAck: true });
-    });
+const client = mqtt.connect("mqtt://127.0.0.1", {
+    port: 1880,
 });
+
+client.on('connect', () => {
+    console.log('Broker connect');
+    client.subscribe("mainqueue", (err) => {
+        console.log(err);
+    });
+    client.on("message", (topic, message) => {
+        console.log(topic, message.toString());
+    });
+})
