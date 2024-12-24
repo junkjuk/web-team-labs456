@@ -39,7 +39,7 @@ INSERT INTO CLIENT(full_name, email, age, sex) VALUES('John Smith', 'johnsmith68
 INSERT INTO CLIENT(full_name, email, age, sex) VALUES('Ann Perkins', 'aaann1987@gmail.com', 32, 'female');
 INSERT INTO CLIENT(full_name, email) VALUES('Test User', 'test@email.com');
 
-INSERT INTO CAR(car_type, price, mileage, condition) VALUES('2006 Toyota corola', 9500, 420000, 'ok');
-INSERT INTO CAR(car_type, price, mileage, condition) VALUES('2016 Cadilac Escalade', 65000, 52000, 'mint');
+INSERT INTO CAR(car_type, price, mileage, condition, image_blob, image_path, image_blob_mime_type) VALUES('2006 Toyota corola', 9500, 420000, 'ok', NULL, NULL, NULL);
+INSERT INTO CAR(car_type, price, mileage, condition, image_blob, image_path, image_blob_mime_type) VALUES('2016 Cadilac Escalade', 65000, 52000, 'mint', NULL, NULL, NULL);
 
 SELECT * FROM pg_catalog.pg_tables

@@ -1,5 +1,5 @@
 const path = require('path');
-const fs = require('fs');
+const fs = require('node:fs/promises');
 const PostgresCrud = require('../utils/postgresCrud');
 const catchAsync = require('../utils/catchAsync');
 const Car = require('../models/carModel');
@@ -19,8 +19,6 @@ exports.addBlobImage = catchAsync(async (req, res) => {
   if (!car) {
     return res.status(404).json({ status: 'error', message: 'Car not found' });
   }
-
-  console.log(req.file)
 
   if (!req.file) {
     return res.status(400).json({ status: 'error', message: 'No image file provided' });
@@ -45,7 +43,6 @@ exports.getBlobImage = catchAsync(async (req, res) => {
   }
 
   const mimeType = car.image_blob_mime_type;
-
   res.set('Content-Type', mimeType);
   res.status(200).send(car.image_blob);
 });
@@ -109,19 +106,19 @@ exports.getPathImage = catchAsync(async (req, res) => {
     return res.status(404).json({ status: 'error', message: 'Image not found' });
   }
 
-  await fs.readFile(car.image_path, (err, data) => {
-    if (err) {
-      if (err.code == 'ENOENT') {
-        return res.status(404).json({ status: 'error', message: 'Image not found' });
-      } else {
-        console.log(err);
-        return res.status(500).json({ status: 'err', message: 'Internal server error' });
-      }
-    }
-    mimeType = 'image/'+car.image_path.split('.')[1]
+  try {
+    const data = await fs.readFile(car.image_path)
+    let mimeType = 'image/' + car.image_path.split('.')[1]
     res.set('Content-Type', mimeType);
     res.status(200).send(data);
-  })
+  } catch (err) {
+    if (err.code == 'ENOENT') {
+      return res.status(404).json({ status: 'error', message: 'Image not found' });
+    } else {
+      console.log(err);
+      return res.status(500).json({ status: 'err', message: 'Internal server error' });
+    }
+  }
 });
 
 exports.deletePathImage = catchAsync(async (req, res) => {

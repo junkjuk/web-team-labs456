@@ -9,6 +9,16 @@
   return data.data;
 }
 
+export async function getImage(url: string) {
+  const res = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+    }
+  });
+  return await res.blob();
+}
+
 export async function patch(url: string, value: any) {
   try {
     const body = JSON.stringify(value);
@@ -19,6 +29,20 @@ export async function patch(url: string, value: any) {
       headers: {
         "Content-Type": "application/json",
       },
+    });
+    const data = await res.json();
+    return data.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function loadFile(url: string, value: any) {
+  try {
+    console.log(value);
+    const res = await fetch(url, {
+      method: 'PATCH',
+      body: value,
     });
     const data = await res.json();
     return data.data;
