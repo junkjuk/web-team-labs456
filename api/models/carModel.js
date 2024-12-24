@@ -32,7 +32,7 @@ const Car = sequelize.define(
     },
     image_blob_mime_type: {
       type: DataTypes.STRING,
-      
+      allowNull: true,
     },
     image_path: {
       type: DataTypes.STRING,

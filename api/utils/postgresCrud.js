@@ -81,7 +81,17 @@ class PostgresCrud {
 
   update() {
     return catchAsync(async (req, res, next) => {
-      const obj = await this.model.update(req.body, {
+      console.log(req.body);
+      console.log(req.params);
+      const car = {
+        car_type: req.body.car_type,
+        price: req.body.price,
+        mileage: req.body.mileage,
+        condition: req.body.condition,
+      }
+      console.log(car);
+
+      const obj = await this.model.update(car, {
         where: {
           id: req.params.id
         },

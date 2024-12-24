@@ -4,6 +4,7 @@ import CarComponent from "./car";
 import ClientsComponent from "./clients";
 import ManagersComponent from "./managers";
 import OrderComponent from "./orders";
+import CarPage from "./car/car.tsx";
 
 function App() {
 
@@ -47,6 +48,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/car" element={<CarComponent/>}/>
+            <Route path="/car/:id" element={<CarPage/>}/>
             <Route path="/clients" element={<ClientsComponent/>}/>
             <Route path="/managers" element={<ManagersComponent/>}/>
             <Route path="/orders" element={<OrderComponent/>}/>
