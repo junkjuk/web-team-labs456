@@ -2,7 +2,7 @@
 
 import {useParams} from "react-router";
 import React, {useEffect, useState} from "react";
-import {get, getImage, loadFile, patch} from "../utils.tsx";
+import {get, getImage, loadFile, patch, remove} from "../utils.tsx";
 import {apiUrl} from "../consts.tsx";
 import {v4 as uuidv4} from "uuid";
 import {Car} from "./types.tsx";
@@ -87,6 +87,13 @@ export default function CarPage() {
     await loadFile(apiUrl + 'cars/' + params.id + '/image_path', formData);
   }
 
+  const deleteImageBlob = async () => {
+    await remove(apiUrl + 'cars/' + params.id + '/image_blob')
+  }
+  const deleteImagePath = async () => {
+    await remove(apiUrl + 'cars/' + params.id + '/image_path')
+  }
+
   return <div className="flex h-full flex-col gap-2 items-center sm:items-start">
     <h1>Cars</h1>
     <When condition={newCar?.id !== ""}>
@@ -125,7 +132,7 @@ export default function CarPage() {
           <img src={fileImage} className="py-5"/>
           <div className="w-full pb-2 flex justify-between">
             <div onClick={saveImagePath}>Save</div>
-            <div>Delete</div>
+            <div onClick={deleteImagePath}>Delete</div>
           </div>
         </div>
         <div>
@@ -136,7 +143,7 @@ export default function CarPage() {
             className="pt-5"/>
           <div className="w-full pb-2 flex justify-between">
             <div onClick={saveImageBlob}>Save</div>
-            <div>Delete</div>
+            <div onClick={deleteImageBlob}>Delete</div>
           </div>
         </div>
       </div>
