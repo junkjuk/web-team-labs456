@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('node:fs/promises');
+const fsSync = require('fs');
 const PostgresCrud = require('../utils/postgresCrud');
 const catchAsync = require('../utils/catchAsync');
 const Car = require('../models/carModel');
@@ -85,8 +86,8 @@ exports.addPathImage = catchAsync(async (req, res) => {
     }
   });
 
-  if (!fs.existsSync(destDir)) {
-    fs.mkdirSync(destDir, { recursive: true });
+  if (!fsSync.existsSync(destDir)) {
+    fsSync.mkdirSync(destDir, { recursive: true });
   }
 
   car.image_path = destPath;
